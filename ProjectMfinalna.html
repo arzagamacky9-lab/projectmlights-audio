@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project M Lights & Audio</title>
+
+
+<link rel="icon" type="image/png" href="334802731_1250853825863366_243814748139733989_n.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{color:#fff;overflow-x:hidden;background:#0b0b10;}
+
+
+.video-bg{position:fixed;inset:0;z-index:-2;}
+.video-bg video{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:2s ease;}
+.video-bg video.active{opacity:1;}
+.overlay{position:fixed;inset:0;background:linear-gradient(135deg,rgba(255,105,180,0.25),rgba(0,0,0,0.75));z-index:-1;}
+
+/* HEADER */
+header{position:fixed;top:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 28px;background:rgba(20,10,20,0.55);backdrop-filter:blur(16px);z-index:1000;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand img{width:42px;height:42px;border-radius:50%;}
+.brand h1{font-size:15px;color:#ff69b4;}
+
+
+nav{position:fixed;top:65px;width:100%;display:flex;justify-content:center;gap:28px;padding:12px;background:rgba(0,0,0,0.25);backdrop-filter:blur(12px);z-index:999;}
+nav a{color:#fff;text-decoration:none;font-size:14px;opacity:0.8;}
+nav a:hover{color:#ff4da6;opacity:1;}
+nav a{
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  opacity:0.8;
+  position:relative;
+  transition:0.3s;
+}
+
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:0;
+  height:2px;
+  background:#ff4da6;
+  transition:0.3s;
+}
+
+nav a:hover::after{
+  width:100%;
+}
+
+nav a:hover{
+  color:#ff4da6;
+  opacity:1;
+}
+
+
+section{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:140px 20px 80px;}
+.container{width:100%;max-width:1200px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,105,180,0.25);border-radius:18px;padding:50px;backdrop-filter:blur(18px);}
+
+
+.hero h2{font-size:54px;}
+.hero p{opacity:0.85;}
+
+
+.events-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+  margin-top:30px;
+}
+.event{
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,105,180,0.15);
+  cursor:pointer;
+  transition:0.4s ease;
+  position:relative;
+}
+
+.event::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    transparent
+  );
+  opacity:0;
+  transition:0.4s;
+}
+
+.event:hover{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 15px 35px rgba(255,105,180,0.25);
+}
+
+.event:hover::before{
+  opacity:1;
+}
+
+.event img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  transition:0.5s ease;
+}
+
+.event:hover img{
+  transform:scale(1.08);
+}
+
+.event h3{
+  position:absolute;
+  bottom:15px;
+  left:20px;
+  z-index:2;
+  font-size:20px;
+  font-weight:700;
+}
+.map{width:100%;height:480px;border-radius:14px;border:0;}
+
+/* BOOKING */
+.booking-box{max-width:600px;margin:auto;text-align:center;}
+input,textarea{width:100%;padding:14px;margin-top:10px;border:none;border-radius:8px;outline:none;}
+button{
+  margin-top:15px;
+  padding:14px 30px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#ff4da6,#ff2f91);
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s ease;
+  box-shadow:0 10px 20px rgba(255,77,166,0.25);
+}
+
+button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 30px rgba(255,77,166,0.4);
+}
+
+.rating-wrap{margin:18px 0;}
+.stars{display:flex;justify-content:center;gap:8px;font-size:28px;cursor:pointer;}
+.stars i{color:#2d2d2d;transition:0.2s;}
+.stars i.active{color:#ff4da6;}
+.rating-text{margin-top:10px;font-size:14px;color:#ffb3d9;}
+
+
+.socials a{font-size:26px;margin:0 10px;color:#fff;opacity:0.85;}
+.socials a:hover{color:#ff4da6;}
+.socials{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+}
+
+.socials a{
+  width:50px;
+  height:50px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  transition:0.3s ease;
+}
+
+.socials a:hover{
+  transform:translateY(-5px) scale(1.08);
+  background:rgba(255,105,180,0.2);
+}
+
+
+footer{text-align:center;padding:30px;background:rgba(0,0,0,0.85);}
+.contact-info{margin-top:10px;font-size:13px;opacity:0.85;}
+
+
+.float-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:linear-gradient(135deg,#ff4da6,#ff2f91);
+  padding:15px 22px;
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 10px 30px rgba(255,77,166,0.35);
+  transition:0.3s ease;
+  z-index:1500;
+}
+
+.float-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:linear-gradient(135deg,#ff4da6,#ff2f91);
+  padding:15px 22px;
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow:0 10px 30px rgba(255,77,166,0.35);
+  transition:0.3s ease;
+  z-index:1500;
+}
+
+.float-btn:hover{
+  transform:translateY(-5px);
+}
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+  flex-direction:column;
+}
+.modal img{max-width:80%;max-height:70%;border-radius:12px;}
+#about p{
+  font-size:15px;
+}
+#location .container{
+  padding:40px;
+}
+
+#location iframe{
+  filter: brightness(1.05) contrast(1.05);
+}
+/* SMOOTH SECTION ANIMATION */
+.container{
+  animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+/* RESPONSIVE */
+@media(max-width:900px){
+
+  .hero h2{
+    font-size:38px;
+    text-align:center;
+  }
+  .hero p{
+  font-size:18px;
+  margin-top:15px;
+  max-width:650px;
+  line-height:1.7;
+}
+
+  .hero p{
+    text-align:center;
+  }
+
+  .events-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .container{
+    padding:35px;
+  }
+
+  nav{
+    gap:16px;
+    overflow-x:auto;
+    white-space:nowrap;
+    padding:12px 20px;
+  }
+
+  nav::-webkit-scrollbar{
+    display:none;
+  }
+}
+
+@media(max-width:600px){
+
+  header{
+    padding:12px 18px;
+  }
+
+  .brand h1{
+    font-size:13px;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .events-grid{
+    grid-template-columns:1fr;
+  }
+
+  .container{
+    padding:22px;
+  }
+
+  .modal img{
+    max-width:95%;
+  }
+
+  .float-btn{
+    right:15px;
+    bottom:15px;
+    padding:12px 18px;
+    font-size:14px;
+  }
+
+  input,
+  textarea,
+  button{
+    font-size:15px;
+  }
+}
+.hidden{
+  opacity:0;
+  transform:translateY(60px);
+  transition:all 1s ease;
+}
+
+.show{
+  opacity:1;
+  transform:translateY(0);
+}
+.container:hover{
+  border-color:rgba(255,105,180,0.45);
+  box-shadow:0 15px 40px rgba(255,105,180,0.12);
+}
+nav a.active{
+  color:#ff4da6;
+  opacity:1;
+}
+#loader{
+  position:fixed;
+  inset:0;
+  background:#050505;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+  transition:1s ease;
+}
+
+.loader-logo{
+  text-align:center;
+  animation:pulse 1.5s infinite;
+}
+
+.loader-logo img{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  box-shadow:0 0 30px rgba(255,105,180,0.5);
+}
+
+.loader-logo h2{
+  margin-top:20px;
+  color:#ff69b4;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+  100%{transform:scale(1);}
+}
+.particles{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.particles span{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:rgba(255,105,180,0.7);
+  border-radius:50%;
+  animation:float 12s linear infinite;
+}
+
+@keyframes float{
+  0%{
+    transform:translateY(100vh) scale(0);
+    opacity:0;
+  }
+
+  10%{
+    opacity:1;
+  }
+
+  100%{
+    transform:translateY(-120px) scale(1);
+    opacity:0;
+  }
+}
+.modal img{
+  transition:0.4s ease;
+}
+
+.modal img:hover{
+  transform:scale(1.03);
+}
+.event h3{
+  text-shadow:0 0 12px rgba(255,105,180,0.6);
+}
+.hero{
+  position:relative;
+}
+
+.hero::after{
+  content:'';
+  position:absolute;
+  width:300px;
+  height:300px;
+  background:rgba(255,105,180,0.15);
+  border-radius:50%;
+  filter:blur(80px);
+  top:-50px;
+  right:-50px;
+}
+#about p{
+  font-size:16px;
+  line-height:1.9;
+  opacity:0.88;
+  text-align:justify;
+  letter-spacing:0.4px;
+  color:#f3f3f3;
+  max-width:900px;
+  margin:auto;
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+}
+
+.brand h1{
+  font-size:15px;
+  color:#ff69b4;
+  transition:0.3s;
+}
+
+.brand:hover h1{
+  color:#ff4da6;
+}
+
+</style>
+</head>
+
+<body>
+ 
+  <div id="loader">
+  <div class="loader-logo">
+    <img src="334802731_1250853825863366_243814748139733989_n.jpg">
+    <h2>Project M Lights & Audio</h2>
+  </div>
+</div>
+
+<div class="video-bg">
+  <video class="active" autoplay muted loop><source src="Background/107259_021882.mp4"></video>
+  <video autoplay muted loop><source src="Background/113779_882203 - Trim.mp4"></video>
+  <video autoplay muted loop><source src="Background/264369_383323 - Trim.mp4"></video>
+  <video autoplay muted loop><source src="Background/137918_470169.mp4"></video>
+</div>
+
+<div class="overlay"></div>
+
+<header>
+  <a href="#home" class="brand">
+    <img src="334802731_1250853825863366_243814748139733989_n.jpg" alt="Project M Logo">
+    <h1>Project M Lights & Audio</h1>
+  </a>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#events">Events</a>
+  <a href="#about">About</a>
+  <a href="#location">Location</a>
+  <a href="#booking">Booking</a>
+</nav>
+
+<section id="home">
+  <div class="container hero">
+    
+    <h2>
+      Premium Sound <br>
+      & Lighting Experience
+    </h2>
+
+    <p>
+      Weddings • Concerts • Festivals • Pageants • Private Events
+    </p>
+
+    <div style="margin-top:25px;">
+      <button onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">
+        Book an Event
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<section id="events">
+  <div class="container">
+    <h2>Events</h2>
+    <div class="events-grid">
+      <div class="event" onclick="openGallery(0)"><img src="wedding/wed.jpg"><h3>Wedding</h3></div>
+      <div class="event" onclick="openGallery(1)"><img src="birthday/birth.jpg"><h3>Birthday</h3></div>
+      <div class="event" onclick="openGallery(2)"><img src="livebands/band.jpg"><h3>Livebands</h3></div>
+      <div class="event" onclick="openGallery(3)"><img src="pageant/538234617_1233304662149044_2375414265081035981_n.jpg"><h3>Pageantry</h3></div>
+      <div class="event" onclick="openGallery(4)"><img src="festival/outdoor.jpg"><h3>Fiesta Celebration</h3></div>
+      <div class="event" onclick="openGallery(5)"><img src="acoustics/539774746_1235983545214489_4047903709028797610_n.jpg"><h3>Acoustics</h3></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    
+    <h2 style="color:#ff69b4;margin-bottom:20px;">About Us</h2>
+
+    <p style="line-height:1.8;opacity:0.9;margin-bottom:15px;">
+          Project M Lights & Audio has over 10 years of experience delivering professional sound and lighting services for all types of events. From small private gatherings to large-scale productions, we have built a strong reputation for creating high-quality and well-balanced event experiences.
+    </p>
+
+    <p style="line-height:1.8;opacity:0.9;margin-bottom:15px;">
+          Over the years, we’ve developed and mastered the art of event production—ensuring that every detail, from audio clarity to lighting atmosphere, is properly executed. Our goal is always to make every event look and feel unforgettable.
+    </p>
+
+    <p style="line-height:1.8;opacity:0.9;">
+          Because of our consistent quality and reliable service, many of our clients continue to book us again and recommend us to others. This trust is what motivates us to keep improving and delivering even better results for every event we handle.
+    </p>
+
+  </div>
+</section>
+
+<section id="location">
+  <div class="container">
+
+    <h2 style="color:#ff69b4;margin-bottom:20px;">Location</h2>
+
+    <div style="
+      width:100%;
+      height:520px;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(255,105,180,0.25);
+    ">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!4v1778000644416!6m8!1m7!1sJT_umaj-JAfi2_0UT6LbeQ!2m2!1d9.096907977139688!2d123.1911982315473!3f124.89!4f-40.66!5f0.7820865974627469"
+        style="
+          width:100%;
+          height:100%;
+          border:0;
+        "
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+    </div>
+
+  </div>
+</section>
+
+<section id="booking">
+  <div class="container booking-box">
+    <h2>Booking</h2>
+
+    <div class="rating-wrap">
+      <div class="stars" id="stars">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <div class="rating-text" id="ratingText">No rating selected</div>
+    </div>
+
+    <input placeholder="Name">
+    <input placeholder="Event Type">
+    <textarea placeholder="Message"></textarea>
+    <button onclick="sendBooking()">Send Request</button>
+
+    <div class="socials">
+      <a href="https://www.facebook.com/projectMlightsandaudio.zambo" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/jekjek.melon" target="_blank"><i class="fab fa-facebook-messenger"></i></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="max-width:1200px;margin:auto;padding:10px 20px;">
+
+    <h3 style="color:#ff69b4;font-size:18px;margin-bottom:10px;">
+      Project M Lights & Audio
+    </h3>
+
+    <p style="font-size:13px;opacity:0.85;line-height:1.6;">
+      10+ years of mastering professional sound and lighting services.<br>
+      Trusted by clients for weddings, concerts, birthdays, and Pageants and many more.<br>
+
+    </p>
+
+    <!-- CONTACT -->
+    <div class="contact-info">
+      📞 +63 917 910 6392 | 📧 jekjekmelon25@gmail.com
+    </div>
+
+    <!-- SOCIAL ICONS -->
+    <div class="socials" style="margin-top:15px;">
+
+  <a href="https://www.facebook.com/projectMlightsandaudio.zambo" target="_blank">
+    <i class="fa-brands fa-facebook-f"></i>
+  </a>
+
+  <a href="https://www.instagram.com/" target="_blank">
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+
+  <a href="https://www.facebook.com/jekjek.melon" target="_blank">
+    <i class="fa-brands fa-facebook-messenger"></i>
+  </a>
+
+</div>
+
+    <hr style="margin:20px 0;border:0;border-top:1px solid rgba(255,255,255,0.1);">
+
+    <p style="font-size:12px;opacity:0.6;">
+      © 2026 Project M Lights & Audio • All Rights Reserved
+    </p>
+
+  </div>
+</footer>
+
+<div class="float-btn" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">
+Book Now
+</div>
+
+<!-- GALLERY MODAL -->
+<div class="modal" id="galleryModal" onclick="closeGallery()">
+  <img id="galleryImg">
+  <div style="position:absolute;bottom:40px;">
+    <button onclick="prevSlide();event.stopPropagation()">❮</button>
+    <button onclick="nextSlide();event.stopPropagation()">❯</button>
+  </div>
+</div>
+<div class="particles"></div>
+
+<script>
+/* STAR */
+const stars=document.querySelectorAll("#stars i");
+const text=document.getElementById("ratingText");
+const msgs=["Very Bad","Bad","Okay","Good","Excellent"];
+let selected=0;
+
+stars.forEach((star,index)=>{
+  star.addEventListener("mouseover",()=>highlight(index+1));
+  star.addEventListener("click",()=>{
+    selected=index+1;
+    text.textContent="Rating: "+msgs[index];
+    setActive(selected);
+  });
+});
+document.getElementById("stars").addEventListener("mouseleave",()=>setActive(selected));
+
+function highlight(v){stars.forEach((s,i)=>s.classList.toggle("active",i<v));}
+function setActive(v){stars.forEach((s,i)=>s.classList.toggle("active",i<v));}
+
+/* VIDEO */
+let vids=document.querySelectorAll(".video-bg video");
+let i=0;
+setInterval(()=>{
+  vids[i].classList.remove("active");
+  i=(i+1)%vids.length;
+  vids[i].classList.add("active");
+},5000);
+
+/* GALLERY */
+const galleries=[
+["wedding/w1.jpg","wedding/w2.jpg","wedding/w3.jpg","wedding/w4.jpg","wedding/w6.jpg","wedding/w5.jpg"],
+["birthday/b1.jpg","birthday/b2.jpg","birthday/b3.jpg","birthday/b4.jpg","birthday/b5.jpg","birthday/b6.jpg"],
+["livebands/l1.jpg","livebands/l2.jpg","livebands/l3.jpg","livebands/l4.jpg","livebands/l5.jpg","livebands/l6.jpg"],
+["pageant/p1.jpg","pageant/p2.jpg","pageant/p3.jpg","pageant/p4.jpg","pageant/p5.jpg","pageant/p6.jpg","pageant/p7.jpg","pageant/p8.jpg","pageant/p9.jpg","pageant/p10.jpg","pageant/p11.jpg","pageant/p12.jp","pageant/p13.jpg","pageant/p14.jpg","pageant/p15.jpg","pageant/p16","pageant/p16","pageant/p17.jpg","pageant/p18.jpg","pageant/p19","pageant/p20.jpg","pageant/p21.jpg","pageant/p22"],
+["festival/festiv.jpg","festival/f1.jpg","festival/f2.jpg","festival/f3.jpg","festival/f4.jpg","festival/f5.jpg","festival/f6.jpg","festival/f7.jpg","festival/f8.jpg","festival/f9.jgp","festival/f10.jpg","festival/f11.jpg","festival/f12.jpg","festival/f13."],
+["acoustics/Acoustic1.jpg","acoustics/Acoustics2.jpg","acoustics/Acoustics3.jpg","acoustics/Acoustics4.jpg","acoustics/Acoustics5.jpg","acoustics/Acoustics6.jpg"]
+];
+
+let currentEvent=0,currentSlide=0,auto;
+
+function openGallery(x){
+  currentEvent=x;
+  currentSlide=0;
+  document.getElementById("galleryModal").style.display="flex";
+  show();
+  auto=setInterval(nextSlide,3000);
+}
+
+function closeGallery(){
+  document.getElementById("galleryModal").style.display="none";
+  clearInterval(auto);
+}
+
+function show(){
+  document.getElementById("galleryImg").src=galleries[currentEvent][currentSlide];
+}
+
+function nextSlide(){
+  currentSlide=(currentSlide+1)%galleries[currentEvent].length;
+  show();
+}
+
+function prevSlide(){
+  currentSlide=(currentSlide-1+galleries[currentEvent].length)%galleries[currentEvent].length;
+  show();
+}
+/* SCROLL REVEAL */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+document.querySelectorAll("section").forEach(sec=>{
+  sec.classList.add("hidden");
+  observer.observe(sec);
+});
+function sendBooking(){
+
+  const name=document.querySelectorAll("input")[0].value;
+  const type=document.querySelectorAll("input")[1].value;
+  const msg=document.querySelector("textarea").value;
+
+  if(name==="" || type==="" || msg===""){
+    alert("Please fill out all fields.");
+    return;
+  }
+
+  alert(
+    "Booking Request Sent!\n\n"+
+    "Name: "+name+
+    "\nEvent: "+type+
+    "\nMessage: "+msg
+  );
+}
+const sections=document.querySelectorAll("section");
+const navLinks=document.querySelectorAll("nav a");
+
+window.addEventListener("scroll",()=>{
+
+  let current="";
+
+  sections.forEach(sec=>{
+    const secTop=sec.offsetTop-180;
+
+    if(pageYOffset>=secTop){
+      current=sec.getAttribute("id");
+    }
+  });
+
+  navLinks.forEach(link=>{
+    link.classList.remove("active");
+
+    if(link.getAttribute("href")==="#"+current){
+      link.classList.add("active");
+    }
+  });
+});
+window.addEventListener('load',()=>{
+
+  const loader=document.getElementById('loader');
+
+  setTimeout(()=>{
+    loader.style.opacity='0';
+    loader.style.visibility='hidden';
+  },2000);
+});
+const particles=document.querySelector('.particles');
+
+for(let i=0;i<40;i++){
+
+  let span=document.createElement('span');
+
+  span.style.left=Math.random()*100+'%';
+  span.style.animationDuration=(Math.random()*10+5)+'s';
+  span.style.width=(Math.random()*8+4)+'px';
+  span.style.height=span.style.width;
+
+  particles.appendChild(span);
+}
+
+</script>
+
+</body>
+</html>
